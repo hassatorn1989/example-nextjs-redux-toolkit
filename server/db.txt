@@ -1,0 +1,30 @@
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    quantity INT NOT NULL
+);
+
+
+INSERT INTO products (name, description, price, quantity) VALUES
+    ('Product 1', 'Description for Product 1', 29.99, 50),
+    ('Product 2', 'Description for Product 2', 49.99, 30),
+    ('Product 3', 'Description for Product 3', 19.99, 80),
+    ('Product 4', 'Description for Product 4', 39.99, 25),
+    ('Product 5', 'Description for Product 5', 99.99, 15),
+    ('Product 6', 'Description for Product 6', 149.99, 10),
+    ('Product 7', 'Description for Product 7', 9.99, 100),
+    ('Product 8', 'Description for Product 8', 79.99, 20),
+    ('Product 9', 'Description for Product 9', 69.99, 35),
+    ('Product 10', 'Description for Product 10', 119.99, 18),
+    ('Product 11', 'Description for Product 11', 89.99, 22),
+    ('Product 12', 'Description for Product 12', 59.99, 45),
+    ('Product 13', 'Description for Product 13', 129.99, 12),
+    ('Product 14', 'Description for Product 14', 79.99, 28),
+    ('Product 15', 'Description for Product 15', 149.99, 8),
+    ('Product 16', 'Description for Product 16', 99.99, 30),
+    ('Product 17', 'Description for Product 17', 69.99, 40),
+    ('Product 18', 'Description for Product 18', 49.99, 55),
+    ('Product 19', 'Description for Product 19', 39.99, 60),
+    ('Product 20', 'Description for Product 20', 109.99, 23);
