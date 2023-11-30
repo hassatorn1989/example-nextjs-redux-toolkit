@@ -50,6 +50,19 @@ export const fetchProducts = createAsyncThunk(
 );
 
 
+export const addProduct = createAsyncThunk('products/addProduct', async (product: Product) => {
+    const response = await fetch(`http://localhost:3001/api/products`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+    });
+    const data = await response.json();
+    return data;
+});
+
+
 export const productSlice = createSlice({
     name: 'products',
     initialState,
@@ -71,7 +84,18 @@ export const productSlice = createSlice({
             .addCase(fetchProducts.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || '';
-            });
+            })
+            .addCase(addProduct.pending, (state, action) => {
+                state.loading = true;
+            })
+            .addCase(addProduct.fulfilled, (state, action: PayloadAction<Product>) => {
+                state.loading = false;
+                state.items.push(action.payload);
+            })
+            .addCase(addProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || '';
+            })
     }
 })
 

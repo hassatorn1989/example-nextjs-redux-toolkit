@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { fetchProducts } from '../store/slices/productSlice'
-import { Table, Form, Spinner, Container, Row, Col } from 'react-bootstrap';
+import { fetchProducts, addProduct } from '../store/slices/productSlice'
+import { Table, Form, Spinner, Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { PaginationControl } from 'react-bootstrap-pagination-control';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,6 +16,10 @@ export default function ProductList() {
     const [searchQuery, setSearchQuery] = useState(''); // State to manage search query
     const [sortBy, setSortBy] = useState('id');
     const [sortOrder, setSortOrder] = useState('ASC');
+
+    // Define your state variables for the modal
+    const [showModal, setShowModal] = useState(false);
+    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, quantity: 0 });
 
     useEffect(() => {
         dispatch(fetchProducts({ page: currentPage, limit: productsPerPage, search: searchQuery, sortBy: sortBy, sortOrder: sortOrder }))
@@ -51,6 +55,26 @@ export default function ProductList() {
         return null;
     };
 
+    // Function to handle form input changes
+    const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setNewProduct({ ...newProduct, [name]: value });
+    };
+
+    // Function to handle form submission for adding a new product
+    const handleAddProduct = () => {
+        // dispatch(/* action to add newProduct */);
+        // Reset modal state and close modal
+        setNewProduct({ name: '', description: '', price: 0, quantity: 0 });
+        dispatch(addProduct(newProduct));
+        setShowModal(false);
+    };
+
+    const handleShowModal = () => {
+        setNewProduct({ name: '', description: '', price: 0, quantity: 0 });
+        setShowModal(true);
+    };
+
     return (
         <>
             <Container className="mt-3">
@@ -68,7 +92,7 @@ export default function ProductList() {
                     </Col>
                     <Col>
                         <div className="text-end">
-                            <button className="btn btn-primary">Add Product</button>
+                            <button className="btn btn-primary" onClick={handleShowModal}>Add Product</button>
                         </div>
                     </Col>
                 </Row>
@@ -154,6 +178,41 @@ export default function ProductList() {
                     </>
                 )}
             </  Container>
+
+            {/* Bootstrap modal */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} backdrop="static" keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add New Product</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {/* Form inside the modal */}
+                    <Form>
+                        <Form.Group controlId="productName">
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control type="text" name="name" value={newProduct.name} onChange={handleInputChange}  autoComplete='off' placeholder='ระบุ'/>
+                        </Form.Group>
+                        <Form.Group controlId="productDescription">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control type="text" name="description" value={newProduct.description} onChange={handleInputChange} autoComplete='off' placeholder='ระบุ' />
+                        </Form.Group>
+                        <Form.Group controlId="productPrice">
+                            <Form.Label>Price</Form.Label>
+                            <Form.Control type="number" name="price" value={newProduct.price} onChange={handleInputChange} autoComplete='off' placeholder='ระบุ' />
+                        </Form.Group>
+                        <Form.Group controlId="productQuantity">
+                            <Form.Label>Quantity</Form.Label>
+                            <Form.Control type="number" name="quantity" value={newProduct.quantity} onChange={handleInputChange} autoComplete='off' placeholder='ระบุ' />
+                        </Form.Group>
+                        {/* Other form inputs for description, price, quantity */}
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+                    <Button variant="primary" onClick={handleAddProduct}>
+                        {(!loading) ? 'Add Product' : 'Adding...' }
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
 
     )
